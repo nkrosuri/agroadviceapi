@@ -90,7 +90,7 @@ class Crop {
             if (!waterRequiredPerSqFeet || typeof waterRequiredPerSqFeet !== "number") {
                 return res.status(400).send({ error: "Water Required Per sqft is required." });
             }
-            if (!timePeriod || typeof timePeriod !== "number" || (timePeriod >= 1 && timePeriod <= 12)) {
+            if (!timePeriod || typeof timePeriod !== "number" || (timePeriod <= 1 && timePeriod >= 12)) {
                 return res.status(400).send({ error: "Time period is required." });
             }
             const crop = await CropModel.findById(cropId).lean().exec();
