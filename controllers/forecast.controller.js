@@ -5,6 +5,7 @@ class Forecast {
         try {
             const { coordinates, cropId, areaOfFarm } = req.body;
             if (!coordinates || !coordinates.length !== 2 || typeof coordinates[0] !== "number" || typeof coordinates[1] !== "number" || !check_lat_lon(coordinates[0], coordinates[1])) {
+                console.log(!coordinates, !coordinates.length !== 2, typeof coordinates[0] !== "number", typeof coordinates[1] !== "number", !check_lat_lon(coordinates[0], coordinates[1]))
                 return res.status(400).send({ error: "invalid coordinates." });
             }
             if (!cropId) {
@@ -33,10 +34,10 @@ class Forecast {
     }
 }
 
-const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
-const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
 
 function check_lat_lon(lat, lon) {
+    const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
+    const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
     let validLat = regexLat.test(lat);
     let validLon = regexLon.test(lon);
     return validLat && validLon;
