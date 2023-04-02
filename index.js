@@ -1,8 +1,10 @@
+const fs = require('fs');
+const http = require("http");
+const https = require('https');
 const express = require("express");
 const cors = require('cors')
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const port = process.env.PORT || 3000;
 
 const routes = require("./routes");
 
@@ -20,5 +22,26 @@ async function main() {
     app.all('*', (req, res) => {
         res.status(200).sendFile(__dirname + '/dist/agri/index.html');
     });
-    app.listen(port, () => console.log(`app running on port ${port}`));
+
+    https
+    .createServer(
+      {
+        key: fs.readFileSync(
+          "/etc/letsencrypt/live/agroadvice.violetdesk.com/privkey.pem",
+          "utf8"
+        ),
+        cert: fs.readFileSync(
+          "/etc/letsencrypt/live/agroadvice.violetdesk.com/cert.pem",
+          "utf8"
+        ),
+        ca: fs.readFileSync(
+          "/etc/letsencrypt/live/agroadvice.violetdesk.com/chain.pem",
+          "utf8"
+        ),
+      },
+      app
+    )
+    .listen(443, () => console.log("HTTPS Server Started"));
+  // http server
+  http.createServer(app).listen(80, () => console.log("HTTP Server Started"));
 }
