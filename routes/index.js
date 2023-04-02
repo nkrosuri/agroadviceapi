@@ -6,6 +6,6 @@ const forecastRoutes = require("./forecast.routes");
 
 router.use("/api/users", userRoutes);
 router.use("/api/crops", cropRoutes);
-router.use("/api/forcast", forecastRoutes);
+router.use("/api/forecast", forecastRoutes);
 
 module.exports = router;
