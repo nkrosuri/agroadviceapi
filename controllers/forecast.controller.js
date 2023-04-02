@@ -4,7 +4,7 @@ class Forecast {
     static async generateForecast(req, res) {
         try {
             const { coordinates, cropId, areaOfFarm } = req.body;
-            if (!coordinates || !coordinates.length !== 2 || typeof coordinates[0] !== "number" || typeof coordinates[0] !== "number" || !check_lat_lon(coordinates[0], coordinates[1])) {
+            if (!coordinates || !coordinates.length !== 2 || typeof coordinates[0] !== "number" || typeof coordinates[1] !== "number" || !check_lat_lon(coordinates[0], coordinates[1])) {
                 return res.status(400).send({ error: "invalid coordinates." });
             }
             if (!cropId) {
