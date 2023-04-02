@@ -49,8 +49,8 @@ class Crop {
                 return res.status(400).send({ error: "Water Required Per sqft is required." });
             }
             
-            if (!timePeriod || typeof timePeriod !== "number" || (timePeriod >= 1 && timePeriod <= 12)) {
-                return res.status(400).send({ error: "Time period is required." });
+            if (!timePeriod || typeof timePeriod !== "number" || (timePeriod <= 1 && timePeriod >= 12)) {
+                return res.status(400).send({ error: "Time period is invalid." });
             }
             const cropNameAlreadyExist = await CropModel.findOne({ cropName }).lean().exec();
             if (cropNameAlreadyExist) {
