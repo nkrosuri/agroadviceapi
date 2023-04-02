@@ -19,7 +19,7 @@ class Forecast {
             }
             const totalSqFeet = areaOfFarm * 43560;
             const totalWaterRequired = crop.waterRequiredPerSqFeet * totalSqFeet;
-            const probabilityOfWater = waterRequired;
+            const probabilityOfWater = totalWaterRequired;
             res.send({
                 ...crop,
                 totalWaterRequired,
