@@ -14,5 +14,9 @@ async function main() {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
     app.use(routes);
+    app.use(express.static(__dirname + '/dist/agri'));
+    app.all('*', (req, res) => {
+        res.status(200).sendFile(__dirname + '/dist/agri/index.html');
+    });
     app.listen(port, () => console.log(`app running on port ${port}`));
 }

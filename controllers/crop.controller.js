@@ -5,7 +5,7 @@ class Crop {
     static async listCrops(req, res) {
         try {
             const crops = await CropModel.find({}).populate('addedBy', ["fullName", "_id"]).lean().exec();
-            return res.send({ data: crops.map(crop => ({ ...crop, owned: String(crop.addedBy._id) === req.user })) });
+            return res.send({ data: crops.map(crop => ({ ...crop, owned: String(crop.addedBy?._id) === req.user })) });
         } catch (err) {
             console.log("Crop.listCrops", err);
             res.status(500).send({ error: "Something went wrong" });
