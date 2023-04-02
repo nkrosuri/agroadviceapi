@@ -1,4 +1,5 @@
 const CropModel = require("../models/crop.model");
+const UserModel = require("../models/user.model");
 
 class Crop {
     static async listCrops(req, res) {
@@ -28,7 +29,11 @@ class Crop {
     static async addCrop(req, res) {
         try {
             const { cropName, imageUrl, description, waterRequiredPerSqFeet, timePeriod } = req.body;
-
+            const user = await UserModel.findOne({ _id: req.user, userType: "farm analyzer" }).lean().exec();
+            
+            if(!user) {
+                return res.status(401).send({ error: "Not authorized to create crop." });
+            }
             if (!cropName || typeof cropName !== "string") {
                 return res.status(400).send({ error: "Crop Name is required." });
             }
@@ -44,7 +49,7 @@ class Crop {
                 return res.status(400).send({ error: "Water Required Per sqft is required." });
             }
             
-            if (!timePeriod || typeof timePeriod !== "number") {
+            if (!timePeriod || typeof timePeriod !== "number" || (timePeriod >= 1 && timePeriod <= 12)) {
                 return res.status(400).send({ error: "Time period is required." });
             }
             const cropNameAlreadyExist = await CropModel.findOne({ cropName }).lean().exec();
@@ -57,6 +62,7 @@ class Crop {
                 imageUrl,
                 description,
                 waterRequiredPerSqFeet,
+                timePeriod,
                 addedBy: req.user
             });
             await crop.save();
@@ -69,7 +75,7 @@ class Crop {
 
     static async updateCrop(req, res) {
         try {
-            const { cropName, imageUrl, description, waterRequiredPerSqFeet } = req.body;
+            const { cropName, imageUrl, description, waterRequiredPerSqFeet, timePeriod } = req.body;
             const { cropId } = req.params;
             if (!cropName || typeof cropName !== "string") {
                 return res.status(400).send({ error: "Crop Name is required." });
@@ -84,6 +90,9 @@ class Crop {
             if (!waterRequiredPerSqFeet || typeof waterRequiredPerSqFeet !== "number") {
                 return res.status(400).send({ error: "Water Required Per sqft is required." });
             }
+            if (!timePeriod || typeof timePeriod !== "number" || (timePeriod >= 1 && timePeriod <= 12)) {
+                return res.status(400).send({ error: "Time period is required." });
+            }
             const crop = await CropModel.findById(cropId).lean().exec();
             if(!crop) {
                 return res.status(404).send({ error: "Crop not found." });
@@ -97,7 +106,7 @@ class Crop {
             if(String(crop.addedBy) !== req.user) {
                 return res.status(401).send({ error: "Not authorized to modify this crop." });
             }
-            await CropModel.findByIdAndUpdate(cropId, { cropName, imageUrl, description, waterRequiredPerSqFeet }).lean().exec();
+            await CropModel.findByIdAndUpdate(cropId, { cropName, imageUrl, description, waterRequiredPerSqFeet, timePeriod }).lean().exec();
             res.send({ modified: true });
         } catch (err) {
             console.log("Crop.updateCrop", err);

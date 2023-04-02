@@ -17,6 +17,10 @@ const cropSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
+    timePeriod: {
+        type: Number,
+        require: true
+    },
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,
