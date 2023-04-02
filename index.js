@@ -14,6 +14,12 @@ async function main() {
     await mongoose.connect('mongodb://127.0.0.1:27017/agroadvice');
     console.log("database connected");
     const app = express();
+    app.use((req, res, next) => {
+        if (req.protocol === 'http') {
+            return res.redirect(301, `https://${req.headers.host}${req.url}`);
+        }
+        next();
+    });
     app.use(cors())
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
