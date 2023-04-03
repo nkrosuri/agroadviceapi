@@ -35,7 +35,7 @@ class User {
             });
             await user.save();
             const token = await Token.createToken(user._id);
-            return res.send({ token });
+            return res.send({ token, userType });
 
         } catch (err) {
             console.log("User.createUser", err);
@@ -55,7 +55,7 @@ class User {
                 return res.status(400).send({ error: "Invalid Email or Password." });
             }
             const token = await Token.createToken(user._id);
-            return res.send({ token });
+            return res.send({ token, userType: user.userType });
         } catch (err) {
             console.log("User.login", err);
             res.status(500).send({ error: "Something went wrong" });
